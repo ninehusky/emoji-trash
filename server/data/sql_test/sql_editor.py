@@ -17,6 +17,14 @@ def delete_table(cursor):
     if choice == 'Y':
         cursor.execute('''DROP TABLE emojis''')
 
-
-create_table(cursor)
-print('Done!')
+if __name__ == '__main__':
+    choice = ''
+    print("This script is used to edit the emojipasta database.")
+    while choice not in [str(x + 1) for x in range(4)]:
+        print("Would you like to:")
+        print("\t1. Create table")
+        print("\t2. Delete table")
+        print("\t3. Edit table")
+        print("\t4. Exit")
+        choice = input(">")
+    print(choice)
