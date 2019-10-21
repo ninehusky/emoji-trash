@@ -3,7 +3,8 @@ body {
 }
 
 main {
-    background-color: #d1d1d1;
+    width: 80%;
+    margin: auto;
 }
 
 #board {

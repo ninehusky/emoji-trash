@@ -5,7 +5,7 @@
 
     function init() {
         document.getElementById('input').addEventListener('input', update);
-        fetch(URL_BASE + '/emojitable')
+        fetch(URL_BASE + '/gettable')
             .then(data => data.json())
             .then(data => {
                 EMOJI_TABLE = data;
@@ -18,12 +18,19 @@
         let output = "";
         for (let index in words) {
             let word = words[index];
-            output += word + " ";
-            console.log(EMOJI_TABLE);
-            if (EMOJI_TABLE[word]) {
-                output += EMOJI_TABLE[word] + " ";
-            }
+            output += word + findEmoji(word) + " ";
+            // console.log(EMOJI_TABLE);
         }
         document.getElementById('output').innerText = output;
+    }
+
+    function findEmoji(word) {
+        for (let index in EMOJI_TABLE) {
+            let wordObj = EMOJI_TABLE[index]; // we could also just use a regular for loop here lmao
+            if (wordObj['word'] == word) {
+                return wordObj['emoji'];
+            }
+        }
+        return '';
     }
 }());
