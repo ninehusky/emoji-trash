@@ -3,6 +3,7 @@ const app = express();
 const path = require('path');
 const mysql = require('mysql');
 const multer = require('multer');
+const readline = require('readline');
 const uploads = multer();
 
 /*
@@ -15,6 +16,21 @@ const uploads = multer();
         - logger?
 
 */
+
+// i put this up here cause i thought it was funny
+// it can't get called from anywhere though
+function nukeDatabase() {
+    const SQL = 'DROP TABLE emojis';
+    const con = connect();
+    con.query(SQL);
+    console.log("Are you sure you want to delete the table? I haven't implemented caching. (Y/n)");
+    let answer = readline();
+    if (answer === 'Y') {
+        console.log('the dark deed you requested is done sir');
+    } else {
+        console.log('Mission aborted o7');
+    }
+}
 
 app.use(express.static('public'));
 
@@ -77,7 +93,6 @@ app.get('/gettable', function(req, res) {
 
     con.query('SELECT * FROM emojis', function(err, data) {
         if (err) throw err;
-        console.log(data);
         res.json(data);
     });
 })
