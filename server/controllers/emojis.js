@@ -1,25 +1,26 @@
 const express = require('express');
 const path = require('path');
 const HOMEDIR = path.join(__dirname, '..');
-const models = path.join(HOMEDIR, 'models', 'emoji-entry');
+const models = require(path.join(HOMEDIR, 'models', 'emoji-entry'));
 
 /**
- * Outputs the emoji database.
+ * GET request endpoint, outputs the emoji database.
  * @param  {Request} req - Request object containing info on HTTP Request
  * @param  {Response} res - Response object used to send back information
  */
 function getAll(req, res) {
-    console.log('get');
+    console.log('GET request detected');
     res.send({'message': 'you did it reddit'});
 }
 
 /**
- * Adds a new emoji entry to the database.
+ * POST request endpoint, adds a new emoji entry to the database.
  * @param  {Request} req - Request object containing info on HTTP Request
  * @param  {Response} res - Response object used to send back information
  */
 function create(req, res) {
-    console.log('create');
+    console.log('POST Request detected');
+    models.create(req, res);
 }
 
 /**
