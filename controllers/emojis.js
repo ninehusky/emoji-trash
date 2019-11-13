@@ -40,6 +40,7 @@ function update(req, res) {
  */
 function destroy(req, res) {
     console.log('destroy');
+    models.destroy(req, res);
 }
 
 module.exports = {

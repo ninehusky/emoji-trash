@@ -94,12 +94,30 @@ function getAll(req, res) {
 }
 
 /**
- * Deletes an emoji containing information in req.body.
+ * Deletes an emoji corresponding to the word specified in req.body.word
+ * Outputs 200 JSON if successful deletion
+ * Outputs 400 error if no word parameter
+ * Outputs 400 error if no entry to delete
+ * Outputs 503 error if some other error in database
+ * 
  * @param {Request} req - Request object containing info on HTTP Request
  * @param {Response} res - Response object used to send back information
  */
 function destroy(req, res) {
-    Emoji.findByIdAndRemove();
+    if (!req.body.word) {
+        return res.status(400).json({'error': 'You must include the word parameter!'})
+    }
+    Emoji.findOneAndDelete({'word': new RegExp(req.body.word, 'i')}, function(err, docs) {
+        if (err) {
+            console.error(err);
+            return res.status(503).json({'error': 'There was an error with the database.'});
+        }
+        if (docs) {
+            return res.status(200).json({'success': 'Entry successfully deleted from the database!'});
+        } else {
+            return res.status(400).json({'error': 'No entry found with the given word.'});
+        }
+    });
 }
 
 /**
