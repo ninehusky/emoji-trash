@@ -5,7 +5,7 @@ const HOMEDIR = path.join(__dirname, '..');
 const controller = require(path.join(HOMEDIR, 'controllers', 'emojis'));
 
 
-router.get('/emojis', controller.getAll);
+router.get('/emojis/getAll', controller.getAll);
 
 router.post('/emojis/create', controller.create);
 router.put('/emojis/update', controller.update);

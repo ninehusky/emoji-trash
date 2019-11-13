@@ -17,7 +17,8 @@ mongoose.connect('mongodb://localhost/nineramen',
 const emojiEntry = new Schema({
     word: {
         type: String,
-        required: [true, 'Word parameter must be included']
+        required: [true, 'Word parameter must be included'],
+        unique: true
     },
     emoji: {
         type: String,
@@ -45,15 +46,17 @@ let Emoji = mongoose.model('Emoji', emojiEntry);
 /**
  * Adds an emoji to the database using the parameters in req.body.
  * The required parameters are req.body.word, req.body.emoji, and req.body.vulgarity.
- * The optional parameters are req.body.absurdity and req.body.description
+ * The optional parameters are req.body.absurdity and req.body.description.
+ * Outputs 200 JSON if success.
+ * Outputs 400 error if word/emoji pair already exists in database, or if missing required
+ * param.
+ * Outputs 503 error if other error.
  * @param {Request} req - Request object containing info on HTTP Request
  * @param {Response} res - Response object used to send back information
  */
 function create(req, res) {
-    console.log(req.body);
     Emoji.create(req.body)
         .then(function(newEntry) {
-            console.log('New entry ', newEntry);
             res.status(200).json({'success': 'New entry successfully created!'});
         })
         .catch(function(err) {
@@ -62,11 +65,25 @@ function create(req, res) {
 }
 
 /**
+ * Gets one emoji entry given a word/emoji pair.
+ * @param {Request} req - Request object containing info on HTTP Request
+ * @param {Response} res - Response object used to send back information
+ */
+function getOne(req, res) {
+    if (!(req.body.word && req.body.emoji)) {
+        res.status(400).json({'error': 'Please include word and emoji parameters!'});
+        return false;
+    } else {
+
+    }
+}
+
+/**
  * Outputs the entire contents of the emoji table.
  * @param {Request} req - Request object containing info on HTTP Request
  * @param {Response} res - Response object used to send back information
  */
-function get(req, res) {
+function getAll(req, res) {
     Emoji.find({})
         .then(function(docs) {
             res.status(200).json(docs);
@@ -81,7 +98,8 @@ function get(req, res) {
  * @param {Request} req - Request object containing info on HTTP Request
  * @param {Response} res - Response object used to send back information
  */
-function deleteEntry(req, res) {
+function destroy(req, res) {
+    Emoji.findByIdAndRemove();
 }
 
 /**
@@ -90,16 +108,21 @@ function deleteEntry(req, res) {
  * @param {Error} err - Error object
  */
 function _handleErrors(res, err) {
-    const keys = Object.keys(err.errors);
-    for (const key of keys) {
-        if (err.errors[key]['name'] === 'ValidatorError') {
-            res.status(400).json({'error': err.errors[key]['message']});
-            return;
+    if (err.errors) {
+        const keys = Object.keys(err);
+        for (const key of keys) {
+            if (err.errors[key]['name'] && err.errors[key]['name'] === 'ValidatorError') {
+                return res.status(400).json({'error': err.errors[key]['message']});
+            }
         }
+    } else if (err.errmsg && err.errmsg.includes('duplicate')) {
+        return res.status(400).json({'error': 'That word already exists in the database!'});
     }
     res.status(500).json({'error': 'There was an error with the database.'});
 }
 
 module.exports = {
-    create
+    create,
+    getAll,
+    destroy
 };

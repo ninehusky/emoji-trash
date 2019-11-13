@@ -10,7 +10,7 @@ const models = require(path.join(HOMEDIR, 'models', 'emoji-entry'));
  */
 function getAll(req, res) {
     console.log('GET request detected');
-    res.send({'message': 'you did it reddit'});
+    models.getAll(req, res);
 }
 
 /**
