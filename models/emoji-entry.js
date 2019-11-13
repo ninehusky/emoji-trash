@@ -35,28 +35,69 @@ const emojiEntry = new Schema({
         required: [true, 'Vulgarity parameter must be included']
     },
     description: {
-        type: String
-
+        type: String,
+        default: "No description given."
     }
 });
 
 let Emoji = mongoose.model('Emoji', emojiEntry);
 
+/**
+ * Adds an emoji to the database using the parameters in req.body.
+ * The required parameters are req.body.word, req.body.emoji, and req.body.vulgarity.
+ * The optional parameters are req.body.absurdity and req.body.description
+ * @param {Request} req - Request object containing info on HTTP Request
+ * @param {Response} res - Response object used to send back information
+ */
 function create(req, res) {
     console.log(req.body);
     Emoji.create(req.body)
         .then(function(newEntry) {
             console.log('New entry ', newEntry);
-            res.json({'message': 'New entry successfully created!'});
+            res.status(200).json({'success': 'New entry successfully created!'});
         })
         .catch(function(err) {
-            err.errors.forEach((error) => {
-                if (error.name === 'ValidationError') {
-                    res.status(422).json(error.message);
-                }
-            });
-            res.status(500).json(err);
+            _handleErrors(res, err);
         });
+}
+
+/**
+ * Outputs the entire contents of the emoji table.
+ * @param {Request} req - Request object containing info on HTTP Request
+ * @param {Response} res - Response object used to send back information
+ */
+function get(req, res) {
+    Emoji.find({})
+        .then(function(docs) {
+            res.status(200).json(docs);
+        })
+        .catch(function(err) {
+            _handleErrors(res, err);
+        });
+}
+
+/**
+ * Deletes an emoji containing information in req.body.
+ * @param {Request} req - Request object containing info on HTTP Request
+ * @param {Response} res - Response object used to send back information
+ */
+function deleteEntry(req, res) {
+}
+
+/**
+ * Outputs the error object's first error to the user.
+ * @param {Response} res - Response object used to send back information
+ * @param {Error} err - Error object
+ */
+function _handleErrors(res, err) {
+    const keys = Object.keys(err.errors);
+    for (const key of keys) {
+        if (err.errors[key]['name'] === 'ValidatorError') {
+            res.status(400).json({'error': err.errors[key]['message']});
+            return;
+        }
+    }
+    res.status(500).json({'error': 'There was an error with the database.'});
 }
 
 module.exports = {
