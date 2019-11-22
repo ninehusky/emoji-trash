@@ -128,6 +128,7 @@ function destroy(req, res) {
 function _handleErrors(res, err) {
     if (err.errors) {
         const keys = Object.keys(err);
+        console.log(err);
         for (const key of keys) {
             if (err.errors[key]['name'] && err.errors[key]['name'] === 'ValidatorError') {
                 return res.status(400).json({'error': err.errors[key]['message']});

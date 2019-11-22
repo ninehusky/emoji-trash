@@ -6,18 +6,26 @@ import React, { Component } from 'react';
 export default class EmojiEntry extends Component {
     constructor(props) {
         super(props);
-        this.state = {
-            "children": []
-        };
+        
         // props initialized
         // this.props.data.forEach((value) => {
         //     this.state.children.append(/* new textbox */);
         // });
     }
 
+    componentDidMount() {
+    }
+
     render() {
         return(
-            <p>I am an EmojiEntry</p>
+            <tr>
+                <th scope="col">{ this.props.data.counter }</th>
+                <th scope="col">{ this.props.data.word }</th>
+                <th scope="col">{ this.props.data.emoji }</th>
+                <th scope="col">{ this.props.data.vulgarity }</th>
+                <th scope="col">{ this.props.data.absurdity }</th>
+                <th scope="col">{ this.props.data.description}</th>
+            </tr>
         );
     }
 }

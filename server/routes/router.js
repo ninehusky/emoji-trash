@@ -9,8 +9,8 @@ const staticController = require(path.join(HOMEDIR, 'controllers', 'static-contr
 /**
  * STATIC WEBSITE ROUTES
  */
-router.get('/', staticController.displaySite);
-router.get('/admin', staticController.displayAdmin);
+// router.get('/', staticController.displaySite);
+// router.get('/admin', staticController.displayAdmin);
 
 /**
  * EMOJI API ROUTES
