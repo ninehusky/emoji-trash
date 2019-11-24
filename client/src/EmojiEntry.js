@@ -6,10 +6,37 @@ import TextBox from './TextBox.js';
 export default class EmojiEntry extends Component {
     constructor(props) {
         super(props);
+        this.handleChange.bind(this);
+        this.state = {
+            id: this.props.data.id,
+            word: this.props.data.word,
+            emoji: this.props.data.emoji,
+            absurdity: this.props.data.absurdity,
+            vulgarity: this.props.data.vulgarity,
+            description: this.props.data.description
+        };
     }
 
     componentDidMount() {
-        console.log(this.props.data.vulgarity);
+    }
+
+    // TODO:
+    /**
+     * handleWordChange()
+     * handleEmojiChange()... etc.
+     * Then, work on pinging database with new EmojiEntry vals
+     * Then, work on deleting something
+     * Then, work on creation
+     * Then, client view
+     * Then, authentication
+     */
+
+    handleChange(e) {
+        this.setState({
+            dbKey: e.target.value
+            
+        });
+        console.log(this.state);
     }
 
     render() {
@@ -20,6 +47,7 @@ export default class EmojiEntry extends Component {
                     <TextBox 
                         dbKey="word"
                         value={ this.props.data.word }
+                        handleChange = { this.handleChange }
                     />
                 </th>
                 <th scope="col">

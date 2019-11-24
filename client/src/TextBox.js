@@ -5,17 +5,11 @@ export default class TextBox extends Component {
         super(props);
         // this.props.dbKey --> key in the database, e.g., word, emoji, etc.
         // this.props.value --> word
-        this.state = {
-            value: this.props.value
-        };
     }
 
 
     handleClick = (e) => {
-        let newValue = prompt('What would you like the value of ' + this.props.dbKey + ' to become?');
-        this.setState({
-            value: newValue
-        });
+        this.props.handleChange(e);
     }
 
     render() {
@@ -23,7 +17,7 @@ export default class TextBox extends Component {
             <div className="textBox"
                  onClick={ this.handleClick }
             >
-                     { this.state.value }
+                     { this.props.value }
             </div>
         );
     }
